@@ -1,20 +1,36 @@
 <?php
 	class RecordController extends AppController{
 		
-		public function index(){
+		
+
+		public function initialize()
+		{
+			parent::initialize();
+			$this->loadComponent('Flash'); // Include the FlashComponent
+			$this->loadComponent('Paginator');
+		}
+		
+		public function index()
+		{
 			ini_set('memory_limit','256M');
 			set_time_limit(0);
 			
 			$this->setFlash('Listing Record page too slow, try to optimize it.');
 			
-			
-			$records = $this->Record->find('all');
-			
-			$this->set('records',$records);
-			
-			
+			$this->paginate = array('Record' => array(
+								
+								'fields' => array('id','name'),
+								'limit' => '15'
+								
+							));
+	
+
+			$this->set('records', $this->paginate('Record'));
+
 			$this->set('title',__('List Record'));
 		}
+		
+		
 		
 		
 // 		public function update(){
@@ -41,3 +57,6 @@
 			
 // 		}
 	}
+	
+	
+	
